@@ -35,6 +35,7 @@ def sql_database():
         house_size INTEGER NOT NULL,
         land_size INTEGER NOT NULL,
         rooms INTEGER NOT NULL,
+        on_funda DATE NOT NULL,
         funda_url TEXT NOT NULL
     );''')
     conn.commit() # Commits the entries to the database
@@ -127,9 +128,11 @@ def add_new_house(funda_global_id, house_name, postalcode, city, house_size, lan
     neighborhood = (detailSoup.find('a',attrs={'fd-m-left-2xs--bp-m fd-display-block fd-display-inline--bp-m'})).text.strip()
     for room in detailSoup.findAll('span',attrs={'kenmerken-highlighted__value fd-text--nowrap'}):
         rooms = room.text   
+    on_funda = ((detailSoup.find('app-object-statistics')))['published-date']
+    print(on_funda)
     conn = sqlite3.connect('Funda_Data.db')
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO Houses (funda_global_id, discovery_date, house_name, postalcode, city, neighborhood, house_size, land_size, rooms, funda_url) VALUES (?,?,?,?,?,?,?,?,?,?)',(funda_global_id, discovery_date, house_name, postalcode, city, neighborhood, house_size, land_size, rooms, url))
+    cursor.execute('INSERT INTO Houses (funda_global_id, discovery_date, house_name, postalcode, city, neighborhood, house_size, land_size, rooms, on_funda, funda_url) VALUES (?,?,?,?,?,?,?,?,?,?,?)',(funda_global_id, discovery_date, house_name, postalcode, city, neighborhood, house_size, land_size, rooms, on_funda, url))
     conn.commit()
     conn.close()
     # Sleep a random number of seconds (between 1 and 3)
